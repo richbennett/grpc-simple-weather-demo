@@ -1,0 +1,109 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "WeatherService";
+
+package weather.forecast.v1; // without namespace option above, generated namespace would be Weather.Forecast.V1;
+
+// Weather service definition
+service WeatherForecast {
+  // Unary call - single request, single response
+  rpc GetWeather (WeatherRequest) returns (WeatherReply);
+  
+  // Server streaming - single request, multiple responses
+  rpc GetWeatherStream (WeatherRequest) returns (stream WeatherReply);
+  
+  // Client streaming - multiple requests, single response
+  rpc UploadWeatherData (stream WeatherReply) returns (WeatherSummary);
+  
+  // Bidirectional streaming - multiple requests, multiple responses
+  rpc LiveWeatherUpdates (stream WeatherRequest) returns (stream WeatherReply);
+}
+
+// Request message
+message WeatherRequest {
+  string city = 1;
+  int32 days = 2;
+}
+
+// Response message
+message WeatherReply {
+  string city = 1;
+  int32 temperature_celsius = 2;
+  string condition = 3;
+  string date = 4;
+  double humidity = 5;
+  double wind_speed = 6;
+  double dew_point = 7;
+}
+
+// Summary message for client streaming
+message WeatherSummary {
+  int32 total_records = 1;
+  double average_temperature = 2;
+  string most_common_condition = 3;
+}
+
+// Some useful well-known types for C#
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/duration.proto";
+
+// Message demonstrating all common C# type mappings to Protocol Buffers
+message TypeMappingMessage {
+  // Basic numeric types
+  int32 int_value = 1;           // C# int (32-bit signed)
+  int64 long_value = 2;          // C# long (64-bit signed)
+  uint32 uint_value = 3;         // C# uint (32-bit unsigned)
+  uint64 ulong_value = 4;        // C# ulong (64-bit unsigned)
+  
+  // Floating point types
+  float float_value = 5;         // C# float (32-bit)
+  double double_value = 6;       // C# double (64-bit)
+  
+  // Boolean
+  bool bool_value = 7;           // C# bool
+  
+  // String
+  string string_value = 8;       // C# string (UTF-8)
+  
+  // Bytes
+  bytes bytes_value = 9;         // C# byte[] array
+  
+  // Collections (repeated fields)
+  repeated string string_list = 10;          // C# List<string> or string[]
+  repeated int32 int_list = 11;              // C# List<int> or int[]
+  repeated WeatherSummary summary_list = 12; // C# List<WeatherSummary>
+  
+  // Map types (key-value pairs)
+  map<string, double> city_temps = 13;       // C# Dictionary<string, double>
+  map<int32, string> id_names = 14;          // C# Dictionary<int, string>
+  
+  // Nested message
+  WeatherSummary summary = 15;               // C# WeatherSummary object
+  
+  // Optional fields (explicit nullability)
+  optional string optional_description = 16; // C# string? (nullable)
+  optional int32 optional_volume = 17;       // C# int? (nullable)
+  
+  // Timestamp (well-known type)
+  google.protobuf.Timestamp time = 18;       // C# DateTime
+  
+  // Duration (well-known type)  
+  google.protobuf.Duration duration = 19;    // C# TimeSpan
+
+  // Enums
+  WindDirection wind_direction = 20;         // C# enum
+}
+
+// Wind direction, notice naming convention, results in WindDirection.Unspecified
+enum WindDirection {
+  WIND_DIRECTION_UNSPECIFIED = 0;
+  WIND_DIRECTION_NORTH = 1;
+  WIND_DIRECTION_NORTHEAST = 2;
+  WIND_DIRECTION_EAST = 3;
+  WIND_DIRECTION_SOUTHEAST = 4;
+  WIND_DIRECTION_SOUTH = 5;
+  WIND_DIRECTION_SOUTHWEST = 6;
+  WIND_DIRECTION_WEST = 7;
+  WIND_DIRECTION_NORTHWEST = 8;
+  WIND_DIRECTION_VARIABLE = 9;
+}
