@@ -92,6 +92,14 @@ message TypeMappingMessage {
 
   // Enums
   WindDirection wind_direction = 20;         // C# enum
+
+  oneof number {
+    bytes big_int = 21;               // For arbitrary precision integers
+    string decimal_string = 22;       // For exact decimal representation
+    string scientific_notation = 23;  // For very large/small numbers
+    string fraction = 24;             // For exact fractional representation
+    bytes binary_data = 25;           // For binary number representations
+  }
 }
 
 // Wind direction, notice naming convention, results in WindDirection.Unspecified
